@@ -19,9 +19,9 @@ public class LoginTest extends BaseTest {
     assertThat(driver.getTitle(), is("MeetHere"));
     driver.findElement(By.linkText("登录")).click();
     assertThat(driver.getTitle(), is("登录-MeetHere"));
-    driver.findElement(By.id("userID")).sendKeys("test001");
+    driver.findElement(By.id("userID")).sendKeys("test");
     driver.findElement(By.id("password")).click();
-    driver.findElement(By.id("password")).sendKeys("1234");
+    driver.findElement(By.id("password")).sendKeys("test");
     driver.findElement(By.id("submit")).click();
     assertThat(driver.getTitle(), is("MeetHere"));
     driver.close();

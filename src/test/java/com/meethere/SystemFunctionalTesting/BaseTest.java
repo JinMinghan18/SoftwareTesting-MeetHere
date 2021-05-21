@@ -15,7 +15,7 @@ public class BaseTest {
     JavascriptExecutor js;
     @BeforeEach
     public void setUp() {
-        System.setProperty("webdriver.chrome.driver", "F:\\JetBrains\\IntelliJ IDEA 2019.1.3\\SeleniumWebDriver\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome\\Application\\chromedriver.exe");
         driver = new ChromeDriver();
         js = (JavascriptExecutor) driver;
         vars = new HashMap<String, Object>();
