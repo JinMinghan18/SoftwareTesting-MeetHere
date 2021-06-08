@@ -2,6 +2,8 @@ package com.meethere.controller.user;
 
 import com.meethere.entity.News;
 import com.meethere.service.NewsService;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,7 @@ class NewsControllerTest {
     private NewsService newsService;
 
     @Test
+    @DisplayName("返回新闻详情页面")
     public void return_news_detail_html() throws Exception {
         when(newsService.findById(1)).thenReturn(new News());
         ResultActions perform=mockMvc.perform(get("/news").param("newsID","1"));
@@ -46,6 +49,7 @@ class NewsControllerTest {
     }
 
     @Test
+    @DisplayName("返回新闻列表数据")
     public void return_news_list_page() throws Exception {
         List<News> newsList=new ArrayList<>();
         newsList.add(new News());
@@ -58,6 +62,7 @@ class NewsControllerTest {
     }
 
     @Test
+    @DisplayName("返回新闻列表页面")
     public void return_news_list_html() throws Exception {
         List<News> newsList=new ArrayList<>();
         newsList.add(new News());

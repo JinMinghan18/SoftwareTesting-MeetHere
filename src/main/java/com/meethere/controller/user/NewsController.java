@@ -36,6 +36,7 @@ public class NewsController {
     }
 
     @GetMapping("/news_list")
+
     public String news_list(Model model){
         Pageable news_pageable= PageRequest.of(0,5, Sort.by("time").descending());
         List<News> news_list= newsService.findAll(news_pageable).getContent();

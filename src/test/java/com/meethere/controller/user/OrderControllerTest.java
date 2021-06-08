@@ -8,6 +8,7 @@ import com.meethere.entity.vo.OrderVo;
 import com.meethere.service.OrderService;
 import com.meethere.service.OrderVoService;
 import com.meethere.service.VenueService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,10 +50,12 @@ class OrderControllerTest {
     private VenueService venueService;
 
     @Test
+    @DisplayName("未登录账号返回订单管理失败")
     public void fail_return_order_manage_html_when_user_not_login() {
         assertThrows(NestedServletException.class,()->mockMvc.perform(get("/order_manage")),"请登录！");
     }
     @Test
+    @DisplayName("登录账号返回订单管理成功")
     public void success_return_order_manage_html_when_user_login() throws Exception {
         int id=1;
         String userID="user";
@@ -89,6 +92,7 @@ class OrderControllerTest {
     }
 
     @Test
+    @DisplayName("场馆详情点击预定按钮")
     public void return_order_place_html_by_click_from_venue_detail()throws Exception {
         when(venueService.findByVenueID(anyInt())).thenReturn(new Venue());
         ResultActions perform=mockMvc.perform(get("/order_place.do").param("venueID","1"));
@@ -99,16 +103,19 @@ class OrderControllerTest {
     }
 
     @Test
+    @DisplayName("点击菜单栏场馆预约")
     public void return_order_place_html_by_click_from_top()throws Exception {
         mockMvc.perform(get("/order_place")).andExpect(status().isOk());
     }
 
     @Test
+    @DisplayName("未登录用户点击订单列表返回信息失败")
     public void fail_return_order_list_when_user_not_login() throws Exception{
         assertThrows(NestedServletException.class,()->mockMvc.perform(get("/getOrderList.do")),"请登录！");
     }
 
     @Test
+    @DisplayName("登录用户点击订单列表返回信息成功")
     public void success_return_order_list_when_user_login() throws Exception{
         int id=1;
         String userID="user";
@@ -138,6 +145,7 @@ class OrderControllerTest {
     }
 
     @Test
+    @DisplayName("未登录用户添加订单失败")
     public void fail_add_new_order_when_user_not_login()throws Exception {
         assertThrows(NestedServletException.class,()->mockMvc.perform(post("/addOrder.do").param("venueName","venue")
                 .param("date","").param("startTime","2019-12-22 11:00").param("hours","1")),
@@ -145,6 +153,7 @@ class OrderControllerTest {
     }
 
     @Test
+    @DisplayName("登录用户添加订单成功")
     public void success_add_new_order_when_user_login() throws Exception{
         User user=new User();
         user.setUserID("user");
@@ -156,6 +165,7 @@ class OrderControllerTest {
     }
 
     @Test
+    @DisplayName("用户完成订单")
     public void user_finish_order() throws Exception{
         ResultActions perform=mockMvc.perform(post("/finishOrder.do").param("orderID","1"));
         perform.andExpect(status().isOk());
@@ -163,6 +173,7 @@ class OrderControllerTest {
     }
 
     @Test
+    @DisplayName("修改订单页面")
     public void return_modify_order_html() throws Exception{
         when(orderService.findById(anyInt())).thenReturn(new Order());
         when(venueService.findByVenueID(anyInt())).thenReturn(new Venue());
@@ -174,6 +185,7 @@ class OrderControllerTest {
     }
 
     @Test
+    @DisplayName("未登录用户修改历史订单失败")
     public void fail_modify_old_order_when_user_not_login() throws Exception{
         assertThrows(NestedServletException.class,()->mockMvc.perform(post("/modifyOrder")
                 .param("venueName","venue").param("date","").param("startTime","2019-12-22 11:00")
@@ -183,6 +195,7 @@ class OrderControllerTest {
     }
 
     @Test
+    @DisplayName("登录用户修改历史订单成功")
     public void success_modify_old_order_when_user_login()throws Exception {
         User user=new User();
         user.setUserID("user");
@@ -193,12 +206,17 @@ class OrderControllerTest {
 
     }
     @Test
+    @DisplayName("用户删除订单")
     public void user_del_order()throws Exception {
-        mockMvc.perform(post("/delOrder.do").param("orderID","1")).andExpect(status().isOk()).andExpect(content().string("true"));
+        mockMvc.perform(post("/delOrder.do")
+                .param("orderID","1"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("true"));
         verify(orderService).delOrder(anyInt());
     }
 
     @Test
+    @DisplayName("返回指定日期订单")
     public void return_ordered_list_on_someday()throws Exception {
         when(venueService.findByVenueName(anyString())).thenReturn(new Venue());
         when(orderService.findDateOrder(anyInt(),any(),any())).thenReturn(null);

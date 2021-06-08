@@ -48,6 +48,7 @@ public class OrderController {
     }
 
     @GetMapping("/order_place.do")
+    @CrossOrigin
     public String order_place(Model model,int venueID) {
 
         Venue venue=venueService.findByVenueID(venueID);

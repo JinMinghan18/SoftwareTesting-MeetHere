@@ -4,6 +4,7 @@ import com.meethere.MeetHereApplication;
 import com.meethere.dao.UserDao;
 import com.meethere.entity.User;
 import com.meethere.service.UserService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,7 +26,8 @@ class UserServiceImplTest {
     private UserServiceImpl userService;
 
     @Test
-    void return_user_ByUserID() {
+    @DisplayName("通过用户名查找用户")
+    void return_user_By_UserID() {
         int id=1;
         String userID="user";
         String password="password";
@@ -39,7 +41,8 @@ class UserServiceImplTest {
         when(userDao.findByUserID(userID)).thenReturn(user);
         User res=userService.findByUserID(userID);
 
-        assertAll("test find by userID",()->assertEquals(id,res.getId()),
+        assertAll("test find by userID",
+                ()->assertEquals(id,res.getId()),
                 ()->assertEquals(userID,res.getUserID()),
                 ()->assertEquals(password,res.getPassword()),
                 ()->assertEquals(email,res.getEmail()),
@@ -52,6 +55,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("通过ID查找用户")
     void return_user_by_id() {
         int id=1;
         String userID="user";
@@ -66,7 +70,8 @@ class UserServiceImplTest {
         when(userDao.findById(id)).thenReturn(user);
         User res=userService.findById(id);
 
-        assertAll("test find by userID",()->assertEquals(id,res.getId()),
+        assertAll("test find by userID",
+                ()->assertEquals(id,res.getId()),
                 ()->assertEquals(userID,res.getUserID()),
                 ()->assertEquals(password,res.getPassword()),
                 ()->assertEquals(email,res.getEmail()),
@@ -78,6 +83,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("查找所有非管理用户")
     void return_user_list_paged() {
         Pageable pageable= PageRequest.of(0,10);
         when(userDao.findAllByIsadmin(0,pageable)).thenReturn(null);
@@ -86,6 +92,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("核验用户账号密码是否正确")
     void check_userID_and_password_matched() {
         int id=1;
         String userID="user";
@@ -112,6 +119,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("注册新用户")
     void register_a_new_user() {
         int id=1;
         String userID="user";
@@ -131,6 +139,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("通过ID删除用户")
     void del_user_by_id() {
         userService.delByID(1);
         verify(userDao).deleteById(1);
@@ -143,6 +152,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("更新用户信息")
     void update_user_info() {
         int id=1;
         String userID="user";
@@ -160,6 +170,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("返回相同用户名的用户")
     void return_number_of_same_userID() {
         String userID="user";
         when(userDao.countByUserID(userID)).thenReturn(1).thenReturn(2);
