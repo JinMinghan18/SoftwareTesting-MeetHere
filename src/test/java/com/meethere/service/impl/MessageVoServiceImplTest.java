@@ -6,6 +6,7 @@ import com.meethere.dao.UserDao;
 import com.meethere.entity.Message;
 import com.meethere.entity.User;
 import com.meethere.entity.vo.MessageVo;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,6 +33,7 @@ class MessageVoServiceImplTest {
     private MessageVoServiceImpl messageVoService;
 
     @Test
+    @DisplayName("根据留言ID向前端返回所需信息")
     void return_messageVo_by_messageID() {
         int id=1;
         LocalDateTime ldt=LocalDateTime.now().minusDays(1);
@@ -58,6 +60,7 @@ class MessageVoServiceImplTest {
     }
 
     @Test
+    @DisplayName("向前端返回留言列表")
     void return_messageVo_list_by_message_list() {
         int id=1;
         LocalDateTime ldt=LocalDateTime.now().minusDays(1);

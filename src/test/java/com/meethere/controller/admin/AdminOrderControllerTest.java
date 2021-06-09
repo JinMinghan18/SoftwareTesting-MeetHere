@@ -3,6 +3,7 @@ package com.meethere.controller.admin;
 import com.meethere.entity.Order;
 import com.meethere.service.OrderService;
 import com.meethere.service.OrderVoService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,7 @@ class AdminOrderControllerTest {
     private OrderVoService orderVoService;
 
     @Test
+    @DisplayName("返回预约订单管理页面")
     public void return_reservation_manage_html() throws Exception {
         int orderID=1;
         String user="user";
@@ -71,6 +73,7 @@ class AdminOrderControllerTest {
     }
 
     @Test
+    @DisplayName("管理员返回需审核订单")
     public void admin_get_no_audit_order_list() throws Exception {
         int orderID=1;
         String user="user";
@@ -94,6 +97,7 @@ class AdminOrderControllerTest {
     }
 
     @Test
+    @DisplayName("管理员通过订单")
     public void admin_confirm_order() throws Exception {
         ResultActions perform=mockMvc.perform(post("/passOrder.do").param("orderID","1"));
         perform.andExpect(status().isOk());
@@ -101,6 +105,7 @@ class AdminOrderControllerTest {
     }
 
     @Test
+    @DisplayName("管理员驳回订单")
     public void admin_reject_order() throws Exception {
         ResultActions perform=mockMvc.perform(post("/rejectOrder.do").param("orderID","1"));
         perform.andExpect(status().isOk());

@@ -3,6 +3,7 @@ package com.meethere.service.impl;
 import com.meethere.MeetHereApplication;
 import com.meethere.dao.NewsDao;
 import com.meethere.entity.News;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = MeetHereApplication.class)
 class NewsServiceImplTest {
     @Mock
@@ -26,6 +28,7 @@ class NewsServiceImplTest {
     private NewsServiceImpl newsService;
 
     @Test
+    @DisplayName("返回所有所需新闻信息")
     public void return_all_news_paged_by_page() {
         Pageable pageable= PageRequest.of(0,10);
         when(newsDao.findAll(pageable)).thenReturn(null);
@@ -34,6 +37,7 @@ class NewsServiceImplTest {
     }
 
     @Test
+    @DisplayName("返回一条新闻信息")
     void return_news_by_newsID() {
         int id=1;
         String title="title";
@@ -50,6 +54,7 @@ class NewsServiceImplTest {
     }
 
     @Test
+    @DisplayName("新建一条新闻")
     void create_news() {
         int id=1;
         String title="title";
@@ -65,17 +70,19 @@ class NewsServiceImplTest {
     }
 
     @Test
+    @DisplayName("删除一条新闻")
     void del_news_by_newsID() {
-        newsService.delById(1);
-        verify(newsDao).deleteById(1);
+        newsService.delById(1002);
+        verify(newsDao).deleteById(1002);
 
-        newsService.delById(2);
-        verify(newsDao).deleteById(2);
+        newsService.delById(1003);
+        verify(newsDao).deleteById(1003);
 
         verify(newsDao,times(2)).deleteById(anyInt());
     }
 
     @Test
+    @DisplayName("修改一条新闻")
     void update_news() {
         int id=1;
         String title="title";
