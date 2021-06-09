@@ -2,6 +2,7 @@ package com.meethere.controller.user;
 
 import com.meethere.entity.Venue;
 import com.meethere.service.VenueService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ class VenueControllerTest {
     private VenueService venueService;
 
     @Test
+    @DisplayName("会场id")
     public void return_venue_detail_html() throws Exception{
         when(venueService.findByVenueID(anyInt())).thenReturn(new Venue());
         ResultActions perform=mockMvc.perform(get("/venue").param("venueID","1"));
@@ -47,6 +49,7 @@ class VenueControllerTest {
     }
 
     @Test
+    @DisplayName("返回会场信息页")
     public void return_venue_list_paged() throws Exception{
         int venueID=1;
         String venue_name="venue";
@@ -67,6 +70,7 @@ class VenueControllerTest {
     }
 
     @Test
+    @DisplayName("返回会场列表页页面")
     public void return_venue_list_html() throws Exception{
         int venueID=1;
         String venue_name="venue";

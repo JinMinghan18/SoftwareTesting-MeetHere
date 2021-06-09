@@ -2,6 +2,7 @@ package com.meethere.controller.user;
 
 import com.meethere.entity.User;
 import com.meethere.service.UserService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,16 +32,19 @@ class UserControllerTest {
     private UserService userService;
 
     @Test
+    @DisplayName("用户已注册")
     public void return_sign_up_html() throws Exception {
         mockMvc.perform(get("/signup")).andExpect(status().isOk());
     }
 
     @Test
+    @DisplayName("用户已登录")
     public void return_login_html() throws Exception{
         mockMvc.perform(get("/login")).andExpect(status().isOk());
     }
 
     @Test
+    @DisplayName("用户信息不在数据库中")
     public void do_not_find_user_in_sql() throws Exception{
         when(userService.checkLogin(anyString(),anyString())).thenReturn(null);
         ResultActions perform=mockMvc.perform(post("/loginCheck.do").param("userID","user").param("password","password"));
@@ -48,6 +52,7 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("用户信息在数据库中")
     public void find_user_in_sql() throws Exception{
         User user=new User();
         user.setUserID("user");
@@ -59,6 +64,7 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("管理员信息在数据库中")
     public void find_admin_in_sql() throws Exception{
         User user=new User();
         user.setUserID("admin");
@@ -70,6 +76,7 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("特殊用户信息在数据库中")
     public void find_special_user_in_sql() throws Exception{
         User user=new User();
         user.setUserID("admin");
@@ -81,6 +88,7 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("新用户注册")
     public void register_a_new_user()throws Exception {
         ResultActions perform=mockMvc.perform(post("/register.do").param("userID","user").param("userName","name").param("password","password")
                 .param("email","email").param("phone","phone"));
@@ -89,17 +97,20 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("用户登出")
     public void user_logout()throws Exception {
         ResultActions perform=mockMvc.perform(get("/logout.do"));
         perform.andExpect(redirectedUrl("/index"));
     }
     @Test
+    @DisplayName("管理员登出")
     public void admin_quit()throws Exception {
         ResultActions perform=mockMvc.perform(get("/quit.do"));
         perform.andExpect(redirectedUrl("/index"));
     }
 
     @Test
+    @DisplayName("用户跟新信息时密码和图片为空")
     public void user_update_info_when_passwordNews_is_null_and_picture_is_null()throws Exception {
         MockMultipartFile mockMultipartFile = new MockMultipartFile("picture","",
                 "picture", "".getBytes());
@@ -117,6 +128,7 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("用户跟新信息时密码不空和图片不为空")
     public void user_update_info_when_passwordNews_is_null_and_picture_is_not_null()throws Exception {
         MockMultipartFile mockMultipartFile = new MockMultipartFile("picture","1.bmp",
                 "picture", "1.bmp".getBytes());
@@ -134,6 +146,7 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("用户跟新信息时密码为空和图片为空")
     public void user_update_info_when_passwordNews_is___and_picture_is_null()throws Exception {
         MockMultipartFile mockMultipartFile = new MockMultipartFile("picture","",
                 "picture", "".getBytes());
@@ -150,6 +163,7 @@ class UserControllerTest {
 
     }
     @Test
+    @DisplayName("用户跟新信息时密码为空和图片不为空")
     public void user_update_info_when_passwordNews_is___and_picture_is_not_null()throws Exception {
         MockMultipartFile mockMultipartFile = new MockMultipartFile("picture","1.bmp",
                 "picture", "1.bmp".getBytes());
@@ -167,6 +181,7 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("用户跟新信息时密码为不为空和图片为空")
     public void user_update_info_when_passwordNews_is_string_and_picture_is_null()throws Exception {
         MockMultipartFile mockMultipartFile = new MockMultipartFile("picture","",
                 "picture", "".getBytes());
@@ -184,6 +199,7 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("用户跟新信息时密码为string和图片不为空")
     public void user_update_info_when_passwordNews_is_string__and_picture_is_not_null()throws Exception {
         MockMultipartFile mockMultipartFile = new MockMultipartFile("picture","1.bmp",
                 "picture", "1.bmp".getBytes());
@@ -202,6 +218,7 @@ class UserControllerTest {
 
 
     @Test
+    @DisplayName("检查密码正确")
     public void check_password_true()throws Exception {
         User user=new User();
         user.setUserID("user");
@@ -213,6 +230,7 @@ class UserControllerTest {
 
 
     @Test
+    @DisplayName("检查密码错误")
     public void check_password_false()throws Exception {
         User user=new User();
         user.setUserID("user");
@@ -223,6 +241,7 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("返回用户信息")
     public void return_user_info_html() throws Exception{
         mockMvc.perform(get("/user_info").sessionAttr("user",new User())).andExpect(status().isOk());
     }

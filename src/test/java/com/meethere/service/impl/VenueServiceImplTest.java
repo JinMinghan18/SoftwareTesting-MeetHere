@@ -4,6 +4,7 @@ import com.meethere.MeetHereApplication;
 import com.meethere.dao.VenueDao;
 import com.meethere.entity.Venue;
 import com.meethere.service.VenueService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,6 +31,7 @@ class VenueServiceImplTest {
     private VenueServiceImpl venueService;
 
     @Test
+    @DisplayName("通过id找会场")
     void find_venue_by_venueID() {
         int venueID=1;
         String venue_name="venue";
@@ -55,6 +57,7 @@ class VenueServiceImplTest {
     }
 
     @Test
+    @DisplayName("通过会场名找会场")
     void  find_venue_by_venueName() {
         int venueID=1;
         String venue_name="venue";
@@ -80,6 +83,7 @@ class VenueServiceImplTest {
     }
 
     @Test
+    @DisplayName("检索所有会场")
     void find_all_return_page() {
         Pageable pageable= PageRequest.of(0,10);
         when(venueDao.findAll(pageable)).thenReturn(null);
@@ -88,6 +92,7 @@ class VenueServiceImplTest {
     }
 
     @Test
+    @DisplayName("检索所有会场列表")
     void find_all_return_list() {
         int venueID=1;
         String venue_name="venue";
@@ -108,6 +113,7 @@ class VenueServiceImplTest {
     }
 
     @Test
+    @DisplayName("新建会场")
     void create_venue() {
         int venueID=1;
         String venue_name="venue";
@@ -125,6 +131,7 @@ class VenueServiceImplTest {
     }
 
     @Test
+    @DisplayName("更新会场")
     void update_venue() {
         int venueID=1;
         String venue_name="venue";
@@ -142,6 +149,7 @@ class VenueServiceImplTest {
     }
 
     @Test
+    @DisplayName("通过会场id删除会场")
     void del_venue_by_venueID() {
         venueService.delById(1);
         verify(venueDao).deleteById(1);
@@ -153,6 +161,7 @@ class VenueServiceImplTest {
     }
 
     @Test
+    @DisplayName("计数相同会场")
     void count_number_of_same_venueName() {
         String venueName="venue";
         when(venueDao.countByVenueName(venueName)).thenReturn(1).thenReturn(2);
