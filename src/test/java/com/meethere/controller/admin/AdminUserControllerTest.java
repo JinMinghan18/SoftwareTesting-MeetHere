@@ -2,6 +2,7 @@ package com.meethere.controller.admin;
 
 import com.meethere.entity.User;
 import com.meethere.service.UserService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,7 @@ class AdminUserControllerTest {
     private UserService userService;
 
     @Test
+    @DisplayName("返回用户管理页面")
     public void return_user_manage_html() throws Exception {
         int id=1;
         String userID="user";
@@ -62,12 +64,14 @@ class AdminUserControllerTest {
     }
 
     @Test
+    @DisplayName("返回添加用户页面")
     public void return_user_add_html() throws Exception {
         ResultActions perform=mockMvc.perform(get("/user_add"));
         perform.andExpect(status().isOk());
     }
 
     @Test
+    @DisplayName("返回用户列表")
     public void return_user_list() throws Exception {
         int id=1;
         String userID="user";
@@ -89,6 +93,7 @@ class AdminUserControllerTest {
     }
 
     @Test
+    @DisplayName("返回用户编辑页面")
     public void return_user_edit_html() throws Exception {
         int id=1;
         String userID="user";
@@ -110,9 +115,11 @@ class AdminUserControllerTest {
     }
 
     @Test
+    @DisplayName("管理员修改用户")
     public void admin_modify_user() throws Exception {
-        int id=1;
-        String userID="user";
+        int id=18;
+        String olduserID="test1";
+        String userID="test2";
         String password="password";
         String email="222@qq.com";
         String phone="12345678901";
@@ -122,14 +129,15 @@ class AdminUserControllerTest {
         User user=new User(id,userID,user_name,password,email,phone,isadmin,picture);
         when(userService.findByUserID(anyString())).thenReturn(user);
 
-        ResultActions perform=mockMvc.perform(post("/modifyUser.do").param("userID","user").param("name","userName").param("password","password")
-                                                                            .param("email","email").param("phone","phone"));
+        ResultActions perform=mockMvc.perform(post("/modifyUser.do").param("oldUserID","olduserID").param("userID","user").param("name","userName").param("password","password")
+                .param("email","email").param("phone","phone"));
         perform.andExpect(redirectedUrl("user_manage"));
         verify(userService).findByUserID(anyString());
         verify(userService).updateUser(any());
     }
 
     @Test
+    @DisplayName("管理员添加用户")
     public void admin_add_user() throws Exception {
         int id=1;
         String userID="user";
@@ -150,6 +158,7 @@ class AdminUserControllerTest {
 
 
     @Test
+    @DisplayName("存在相同用户ID的情况")
     public void return_already_exist_same_userID() throws Exception {
         when(userService.countUserID("user")).thenReturn(1);
         ResultActions perform=mockMvc.perform(post("/checkUserID.do").param("userID","user"));
@@ -158,6 +167,7 @@ class AdminUserControllerTest {
     }
 
     @Test
+    @DisplayName("不存在相同用户ID的情况")
     public void return_not_exist_same_userID() throws Exception {
         when(userService.countUserID("user")).thenReturn(0);
         ResultActions perform=mockMvc.perform(post("/checkUserID.do").param("userID","user"));
@@ -166,6 +176,7 @@ class AdminUserControllerTest {
     }
 
     @Test
+    @DisplayName("删除用户")
     public void admin_del_user() throws Exception {
         ResultActions perform=mockMvc.perform(post("/delUser.do").param("id","1"));
         perform.andExpect(status().isOk());
