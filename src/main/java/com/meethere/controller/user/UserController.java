@@ -85,7 +85,7 @@ public class UserController {
     public void updateUser(String userName, String userID, String passwordNew,String email, String phone, MultipartFile picture,HttpServletRequest request, HttpServletResponse response) throws Exception {
         User user=userService.findByUserID(userID);
         user.setUserName(userName);
-        if(passwordNew!=null&& !"".equals(passwordNew)){
+        if(passwordNew!=null && !"".equals(passwordNew)){
             user.setPassword(passwordNew);
         }
         user.setEmail(email);

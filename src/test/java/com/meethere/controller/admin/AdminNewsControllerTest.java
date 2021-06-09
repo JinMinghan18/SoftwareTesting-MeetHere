@@ -2,6 +2,7 @@ package com.meethere.controller.admin;
 
 import com.meethere.entity.News;
 import com.meethere.service.NewsService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.context.junit.jupiter.DisabledIf;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -44,6 +46,7 @@ class AdminNewsControllerTest {
     private NewsService newsService;
 
     @Test
+    @DisplayName("返回管理员管理新闻页面")
     public void return_news_manage_html() throws Exception{
         int id=1;
         String title="title";
@@ -55,22 +58,25 @@ class AdminNewsControllerTest {
         Pageable news_pageable= PageRequest.of(0,10, Sort.by("time").ascending());
         when(newsService.findAll(news_pageable)).thenReturn(new PageImpl<>(news1,news_pageable,1));
 
-        ResultActions perform=mockMvc.perform(get("/news_manage"));
-        perform.andExpect(status().isOk());
+        ModelAndView mv = mockMvc.perform(get("/news_manage"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getModelAndView();
+
         verify(newsService).findAll(any());
-        MvcResult mvcResult=mockMvc.perform(get("/news_manage")).andReturn();
-        ModelAndView mv=mvcResult.getModelAndView();
         assertModelAttributeAvailable(mv,"total");
-        verify(newsService,times(2)).findAll(any());
+        verify(newsService,times(1)).findAll(any());
     }
 
     @Test
+    @DisplayName("新闻发布页面")
     public void return_news_add_html()throws Exception {
         ResultActions perform=mockMvc.perform(get("/news_add"));
         perform.andExpect(status().isOk());
     }
 
     @Test
+    @DisplayName("修改新闻页面")
     public void return_news_edit_html() throws Exception {
         int id=1;
         String title="title";
@@ -88,6 +94,7 @@ class AdminNewsControllerTest {
     }
 
     @Test
+    @DisplayName("分页返回新闻")
     public void return_news_list() throws Exception {
         int id=1;
         String title="title";
@@ -105,6 +112,7 @@ class AdminNewsControllerTest {
     }
 
     @Test
+    @DisplayName("删除新闻")
     public void admin_del_news() throws Exception {
         ResultActions perform=mockMvc.perform(post("/delNews.do").param("newsID","1"));
         perform.andExpect(status().isOk());
@@ -112,6 +120,7 @@ class AdminNewsControllerTest {
     }
 
     @Test
+    @DisplayName("修改新闻")
     public void admin_modify_news() throws Exception {
         when(newsService.findById(1)).thenReturn(new News());
         ResultActions perform=mockMvc.perform(post("/modifyNews.do").param("newsID","1").param("title","this is title").

@@ -2,8 +2,10 @@ package com.meethere.controller.admin;
 
 import com.meethere.MeetHereApplication;
 import com.meethere.entity.Message;
+import com.meethere.entity.vo.MessageVo;
 import com.meethere.service.MessageService;
 import com.meethere.service.MessageVoService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +33,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.ModelAndViewAssert.assertModelAttributeAvailable;
+import static org.springframework.test.web.ModelAndViewAssert.assertViewName;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(SpringExtension.class)
 @WebMvcTest(AdminMessageController.class)
 class AdminMessageControllerTest {
     @Autowired
@@ -46,6 +48,7 @@ class AdminMessageControllerTest {
     private MessageVoService messageVoService;
 
     @Test
+    @DisplayName("返回管理员管理留言页面")
     public void return_message_manage_html() throws Exception {
         int id=1;
         LocalDateTime ldt1=LocalDateTime.now().minusDays(1);
@@ -55,25 +58,32 @@ class AdminMessageControllerTest {
         Pageable message_pageable= PageRequest.of(0,10, Sort.by("time").descending());
         when(messageService.findWaitState(any())).thenReturn(new PageImpl<>(messages,message_pageable,1));
 
-        ResultActions perform=mockMvc.perform(get("/message_manage"));
-        perform.andExpect(status().isOk());
+        ModelAndView mv = mockMvc.perform(get("/message_manage"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getModelAndView();
+
         verify(messageService).findWaitState(any());
-        MvcResult mvcResult=mockMvc.perform(get("/message_manage")).andReturn();
-        ModelAndView mv=mvcResult.getModelAndView();
         assertModelAttributeAvailable(mv,"total");
-        verify(messageService,times(2)).findWaitState(any());
+        assertViewName(mv,"admin/message_manage");
+        verify(messageService,times(1)).findWaitState(any());
     }
 
     @Test
+    @DisplayName("分页返回待审核留言")
     public void return_message_list_to_audit() throws Exception {
         int id=1;
         LocalDateTime ldt1=LocalDateTime.now().minusDays(1);
-        Message message=new Message(id,"user","this is a leave message", ldt1,1);
+        String content = "this is a leave message";
+        String user = "user";
+        Message message=new Message(id,user,content, ldt1,1);
         List<Message> messages=new ArrayList<>();
         messages.add(message);
         Pageable message_pageable= PageRequest.of(0,10, Sort.by("time").descending());
         when(messageService.findWaitState(any())).thenReturn(new PageImpl<>(messages,message_pageable,1));
-        when(messageVoService.returnVo(messages)).thenReturn(null);
+        List<MessageVo> messageVos=new ArrayList<>();
+        messageVos.add(new MessageVo(id,user,content,ldt1,"test","",1));
+        when(messageVoService.returnVo(messages)).thenReturn(messageVos);
         ResultActions perform=mockMvc.perform(get("/messageList.do"));
         perform.andExpect(status().isOk());
         verify(messageService).findWaitState(any());
@@ -81,6 +91,7 @@ class AdminMessageControllerTest {
     }
 
     @Test
+    @DisplayName("管理员通过留言")
     public void admin_pass_message() throws Exception {
         ResultActions perform=mockMvc.perform(post("/passMessage.do").param("messageID","1"));
         perform.andExpect(status().isOk());
@@ -88,6 +99,7 @@ class AdminMessageControllerTest {
     }
 
     @Test
+    @DisplayName("管理员驳回留言")
     public void admin_reject_message() throws Exception {
         ResultActions perform=mockMvc.perform(post("/rejectMessage.do").param("messageID","1"));
         perform.andExpect(status().isOk());
@@ -95,6 +107,7 @@ class AdminMessageControllerTest {
     }
 
     @Test
+    @DisplayName("管理员删除留言")
     public void admin_del_message() throws Exception {
         ResultActions perform=mockMvc.perform(post("/delMessage.do").param("messageID","1"));
         perform.andExpect(status().isOk());

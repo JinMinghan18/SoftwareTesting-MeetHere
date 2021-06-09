@@ -15,7 +15,10 @@ spring:
       enabled: true
       additional-paths: src/main/java
   datasource:
-    url: jdbc:mysql://localhost:3306/meethere_db?useSSL=false&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_To_NULL&serverTimezone=Asia/Shanghai
+#    url: jdbc:mysql://114.116.250.233:3306/meethere_db?useSSL=false&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_To_NULL&serverTimezone=Asia/Shanghai
+#    username: meethere_db
+#    password: 111111
+    url: jdbc:mysql://115.200.60.217:3306/meethere_db?useSSL=false&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_To_NULL&serverTimezone=Asia/Shanghai
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver

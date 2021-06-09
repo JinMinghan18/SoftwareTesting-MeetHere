@@ -275,7 +275,8 @@
 
     $("#userName").keyup(function(){
         let len = $(this).val().length;
-        if(len > 17){
+        if(len > 18){   //改进：不影响功能，但是逻辑错误，18位时进行截取18位 by hzw
+        // if(len > 17){
             $(this).val($(this).val().substring(0,18));
             $(this).tooltip('show');
             setTimeout(function(){
@@ -285,7 +286,8 @@
     });
     $("#email").keyup(function(){
         let len = $(this).val().length;
-        if(len > 31){
+        if(len > 32){   //改进：不影响功能，但是逻辑错误，32位时进行截取32位 by hzw
+        // if(len > 31){
             $(this).val($(this).val().substring(0,32));
             $(this).tooltip('show');
             setTimeout(function(){
@@ -295,7 +297,8 @@
     });
     $("#phone").keyup(function(){
         let len = $(this).val().length;
-        if(len > 10){
+        if(len > 11){   //改进：不影响功能，但是逻辑错误，11位时进行截取11位 by hzw
+        // if(len > 10){
             $(this).val($(this).val().substring(0,11));
             $(this).tooltip('show');
             setTimeout(function(){
@@ -305,7 +308,8 @@
     });
     $("#password").keyup(function(){
         let len = $(this).val().length;
-        if(len > 15){
+        if(len > 16){   //改进：不影响功能，但是逻辑错误，16位时进行截取16位 by hzw
+        // if(len > 15){
             $(this).val($(this).val().substring(0,16));
             $(this).tooltip('show');
             setTimeout(function(){
@@ -315,7 +319,8 @@
     });
     $("#passwordNew").keyup(function(){
         let len = $(this).val().length;
-        if(len > 15){
+        if(len > 16){   //改进：不影响功能，但是逻辑错误，16位时进行截取16位 by hzw
+        // if(len > 15){
             $(this).val($(this).val().substring(0,16));
             $(this).tooltip('show');
             setTimeout(function(){

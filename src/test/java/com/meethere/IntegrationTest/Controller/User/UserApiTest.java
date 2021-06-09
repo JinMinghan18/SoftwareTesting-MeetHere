@@ -49,8 +49,8 @@ public class UserApiTest {
 
     @Test
     public void find_user_in_sql() throws Exception{
-        ResultActions perform=mockMvc.perform(post("/loginCheck.do").param("userID","test").param("password","test"));
-        perform.andExpect(status().isOk());
+        ResultActions perform=mockMvc.perform(post("/loginCheck.do").param("userID","test").param("password","test1"));
+        perform.andExpect(status().isOk()).andExpect(content().string("/index"));
     }
 
     @Test
@@ -97,7 +97,6 @@ public class UserApiTest {
                         .param("email","email").param("phone","phone");
         ResultActions perform=mockMvc.perform(builder);
         perform.andExpect(redirectedUrl("user_info"));
-
     }
 
     @Test

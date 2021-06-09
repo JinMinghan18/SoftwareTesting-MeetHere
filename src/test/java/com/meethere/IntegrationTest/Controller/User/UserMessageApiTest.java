@@ -96,13 +96,16 @@ public class UserMessageApiTest {
 
     @Test
     public void user_add_new_message()throws Exception {
-        ResultActions perform=mockMvc.perform(post("/sendMessage").param("userID","test").param("content","this is content"));
+        String content = "";
+        for (int i = 0;i<5500;i++) content += "*";
+        System.out.println(content);
+        ResultActions perform=mockMvc.perform(post("/sendMessage").param("userID","test").param("content",content));
         perform.andExpect(redirectedUrl("/message_list"));
     }
 
 
     @Test
-    public void user_modify_message()throws Exception {
+    public void user_modify_messagusere()throws Exception {
         ResultActions perform=mockMvc.perform(post("/modifyMessage.do").param("messageID","2").param("userID","user").param("content","this is content"));
         perform.andExpect(content().string("true"));
     }

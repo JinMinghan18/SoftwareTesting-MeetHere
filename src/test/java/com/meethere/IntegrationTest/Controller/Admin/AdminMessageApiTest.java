@@ -53,7 +53,6 @@ public class AdminMessageApiTest {
     public void return_message_list_to_audit() throws Exception {
         ResultActions perform=mockMvc.perform(get("/messageList.do"));
         perform.andExpect(status().isOk()).andDo(print());
-
     }
 
     @Test

@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -26,7 +27,11 @@ public class FileUtil {
         if (picture.isEmpty()) {
             return "";
         }
-        String fileDirPath = ClassUtils.getDefaultClassLoader().getResource("static").getPath() + "/file/venue";
+        // 改进：使用UrlDecode解码 by hzw
+        String url = ClassUtils.getDefaultClassLoader().getResource("static").getPath();
+        url = url.replaceAll("%(?![0-9a-fA-F]{2})", "%25");
+        String urlStr = URLDecoder.decode(url, "UTF-8");
+        String fileDirPath = urlStr + "/file/venue";
         return "file/venue/" + savePicture(fileDirPath, picture);
     }
 
@@ -34,7 +39,11 @@ public class FileUtil {
         if (picture.isEmpty()) {
             return "";
         }
-        String fileDirPath = ClassUtils.getDefaultClassLoader().getResource("static").getPath() + "/file/user";
+        // 改进：使用UrlDecode解码 by hzw
+        String url = ClassUtils.getDefaultClassLoader().getResource("static").getPath();
+        url = url.replaceAll("%(?![0-9a-fA-F]{2})", "%25");
+        String urlStr = URLDecoder.decode(url, "UTF-8");
+        String fileDirPath = urlStr + "/file/user";
         return "file/user/" + savePicture(fileDirPath, picture);
     }
 

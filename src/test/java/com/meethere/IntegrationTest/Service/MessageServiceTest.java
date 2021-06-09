@@ -69,7 +69,10 @@ public class MessageServiceTest {
     public void create_new_message() {
         LocalDateTime ldt=LocalDateTime.now().minusDays(1);
         Message message=new Message();
-        message.setContent("this is a new message");
+        String content = "this is a new message";
+        content = "";
+        for (int i = 0;i<501;i++) content += "*";
+        message.setContent(content);
         message.setState(1);
         message.setTime(ldt);
         message.setUserID("user");
