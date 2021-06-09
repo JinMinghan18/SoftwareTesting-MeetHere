@@ -2,8 +2,10 @@ package com.meethere.controller.user;
 
 import com.meethere.entity.Message;
 import com.meethere.entity.User;
+import com.meethere.exception.LoginException;
 import com.meethere.service.MessageService;
 import com.meethere.service.MessageVoService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.NestedServletException;
@@ -42,6 +45,7 @@ class MessageControllerTest {
     private MessageVoService messageVoService;
 
     @Test
+    @DisplayName("用户未登录时返回消息列表页面失败")
     public void fail_return_message_list_html_when_user_not_login() throws Exception {
         int id=1;
         LocalDateTime ldt1=LocalDateTime.now().minusDays(1);
@@ -53,12 +57,11 @@ class MessageControllerTest {
         when(messageVoService.returnVo(any())).thenReturn(null);
 
         assertThrows(NestedServletException.class,()->mockMvc.perform(get("/message_list")),"请登录！");
-//        MvcResult result=mockMvc.perform(get("/message_list")).andExpect(status().is5xxServerError()).andReturn();
-//        assertThrows(LoginException.class,()->mockMvc.perform(get("/message_list")),"请登录！");
 
     }
 
     @Test
+    @DisplayName("用户登录成功返回消息列表页面")
     public void success_return_message_list_html_when_user_login() throws Exception {
         int id=1;
         LocalDateTime ldt1=LocalDateTime.now().minusDays(1);
@@ -92,6 +95,7 @@ class MessageControllerTest {
     }
 
     @Test
+    @DisplayName("回传通过的消息列表")
     public void return_pass_message_list()throws Exception {
         int id=1;
         LocalDateTime ldt1=LocalDateTime.now().minusDays(1);
@@ -108,6 +112,7 @@ class MessageControllerTest {
     }
 
     @Test
+    @DisplayName("用户登录成功返回用户消息列表")
     public void success_return_user_message_list_when_user_login() throws Exception{
         int id=1;
         LocalDateTime ldt1=LocalDateTime.now().minusDays(1);
@@ -136,28 +141,88 @@ class MessageControllerTest {
     }
 
     @Test
+    @DisplayName("用户未登录时失败返回用户消息列表")
     public void fail_return_user_message_list_when_user_not_login() throws Exception{
         assertThrows(NestedServletException.class,()->mockMvc.perform(get("/message/findUserList")),"请登录！");
     }
 
     @Test
-    public void user_add_new_message()throws Exception {
+    @DisplayName("用户添加新消息超过500")
+    public void user_add_new_message_longer_than_500()throws Exception {
         when(messageService.create(any())).thenReturn(1);
-        ResultActions perform=mockMvc.perform(post("/sendMessage").param("userID","user").param("content","this is content"));
+        String message = "";
+        for(int i = 1; i <= 501; i++) {
+            message += "e";
+        }
+//        ResultActions perform=mockMvc.perform(post("/sendMessage").param("userID","user").param("content","this is content"));
+        ResultActions perform=mockMvc.perform(post("/sendMessage").param("userID","user").param("content",message));
+        perform.andExpect(redirectedUrl("/message_list"));
+        verify(messageService).create(any());
+    }
+
+    @Test
+    @DisplayName("用户添加新消息正常范围")
+    public void user_add_new_message_normal()throws Exception {
+        when(messageService.create(any())).thenReturn(1);
+        String message = "";
+        for(int i = 1; i <= 100; i++) {
+            message += "e";
+        }
+//        ResultActions perform=mockMvc.perform(post("/sendMessage").param("userID","user").param("content","this is content"));
+        ResultActions perform=mockMvc.perform(post("/sendMessage").param("userID","user").param("content",message));
+        perform.andExpect(redirectedUrl("/message_list"));
+        verify(messageService).create(any());
+    }
+
+    @Test
+    @DisplayName("用户添加新消息为空")
+    public void user_add_new_message_with_null()throws Exception {
+        when(messageService.create(any())).thenReturn(1);
+        String message = "";
+//        ResultActions perform=mockMvc.perform(post("/sendMessage").param("userID","user").param("content","this is content"));
+        ResultActions perform=mockMvc.perform(post("/sendMessage").param("userID","user").param("content",message));
         perform.andExpect(redirectedUrl("/message_list"));
         verify(messageService).create(any());
     }
 
 
     @Test
-    public void user_modify_message()throws Exception {
+    @DisplayName("用户修改消息超过500")
+    public void user_modify_message_with_longer_than_500()throws Exception {
         when(messageService.findById(anyInt())).thenReturn(new Message());
-        ResultActions perform=mockMvc.perform(post("/modifyMessage.do").param("messageID","1").param("userID","user").param("content","this is content"));
+        String message = "";
+        for(int i = 1; i <= 501; i++) {
+            message += "e";
+        }
+        ResultActions perform=mockMvc.perform(post("/modifyMessage.do").param("messageID","1").param("userID","user").param("content",message));
         perform.andExpect(content().string("true"));
         verify(messageService).update(any());
     }
 
     @Test
+    @DisplayName("用户修改消息正常范围")
+    public void user_modify_message_nmoal()throws Exception {
+        when(messageService.findById(anyInt())).thenReturn(new Message());
+        String message = "";
+        for(int i = 1; i <= 100; i++) {
+            message += "e";
+        }
+        ResultActions perform=mockMvc.perform(post("/modifyMessage.do").param("messageID","1").param("userID","user").param("content",message));
+        perform.andExpect(content().string("true"));
+        verify(messageService).update(any());
+    }
+    @Test
+    @DisplayName("用户修改消息为空")
+    public void user_modify_message_with_null()throws Exception {
+        when(messageService.findById(anyInt())).thenReturn(new Message());
+        String message = "";
+        ResultActions perform=mockMvc.perform(post("/modifyMessage.do").param("messageID","1").param("userID","user").param("content",message));
+        perform.andExpect(content().string("true"));
+        verify(messageService).update(any());
+    }
+
+    @Test
+    @DisplayName("用户删除消息")
     public void user_del_message()throws Exception {
         ResultActions perform=mockMvc.perform(post("/delMessage.do").param("messageID","1"));
         perform.andExpect(content().string("true"));

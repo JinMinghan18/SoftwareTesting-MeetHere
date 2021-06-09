@@ -2,6 +2,7 @@ package com.meethere.controller.admin;
 
 import com.meethere.entity.Venue;
 import com.meethere.service.VenueService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,7 @@ class AdminVenueControllerTest {
     private VenueService venueService;
 
     @Test
+    @DisplayName("返回场地管理页面")
     public void return_venue_manage_html() throws Exception {
         int venueID=1;
         String venue_name="venue";
@@ -65,6 +67,7 @@ class AdminVenueControllerTest {
     }
 
     @Test
+    @DisplayName("返回编辑场馆页面")
     public void return_edit_venue() throws Exception {
         int venueID=1;
         String venue_name="venue";
@@ -86,12 +89,14 @@ class AdminVenueControllerTest {
     }
 
     @Test
+    @DisplayName("返回添加场馆页面")
     public void return_venue_add_html() throws Exception {
         ResultActions perform=mockMvc.perform(get("/venue_add"));
         perform.andExpect(status().isOk());
     }
 
     @Test
+    @DisplayName("返回场馆列表")
     public void return_venue_list()  throws Exception{
         int venueID=1;
         String venue_name="venue";
@@ -113,6 +118,7 @@ class AdminVenueControllerTest {
     }
 
     @Test
+    @DisplayName("管理员添加场地图片为空成功")
     public void admin_success_add_venue_picture_is_null()  throws Exception{
         MockMultipartFile mockMultipartFile = new MockMultipartFile("picture","",
                 "picture", "".getBytes());
@@ -129,6 +135,7 @@ class AdminVenueControllerTest {
     }
 
     @Test
+    @DisplayName("管理员添加场地图片不为空成功")
     public void admin_success_add_venue_picture_is_not_null() throws Exception {
         MockMultipartFile mockMultipartFile = new MockMultipartFile("picture","1.bmp",
                 "picture", "1.bmp".getBytes());
@@ -145,6 +152,7 @@ class AdminVenueControllerTest {
     }
 
     @Test
+    @DisplayName("管理员添加场地图片为空失败")
     public void admin_fail_add_venue_picture_is_null() throws Exception {
         MockMultipartFile mockMultipartFile = new MockMultipartFile("picture","",
                 "picture", "".getBytes());
@@ -161,6 +169,7 @@ class AdminVenueControllerTest {
     }
 
     @Test
+    @DisplayName("管理员添加场地图片不为空失败")
     public void admin_fail_add_venue_picture_is_not_null() throws Exception {
         MockMultipartFile mockMultipartFile = new MockMultipartFile("picture","1.bmp",
                 "picture", "1.bmp".getBytes());
@@ -177,6 +186,7 @@ class AdminVenueControllerTest {
     }
 
     @Test
+    @DisplayName("管理员修改场地图片为空")
     public void admin_modify_venue_picture_is_null() throws Exception {
         when(venueService.findByVenueID(anyInt())).thenReturn(new Venue());
 
@@ -195,6 +205,7 @@ class AdminVenueControllerTest {
     }
 
     @Test
+    @DisplayName("管理员修改场地图片不为空")
     public void admin_modify_venue_picture_is_not_null() throws Exception {
         MockMultipartFile mockMultipartFile = new MockMultipartFile("picture","1.bmp",
                 "picture", "1.bmp".getBytes());
@@ -212,6 +223,7 @@ class AdminVenueControllerTest {
     }
 
     @Test
+    @DisplayName("管理员删除场馆")
     public void admin_del_venue() throws Exception {
 
         ResultActions perform=mockMvc.perform(post("/delVenue.do").param("venueID","1"));
@@ -220,6 +232,7 @@ class AdminVenueControllerTest {
     }
 
     @Test
+    @DisplayName("验证场馆名字已经存在相同的场地名称")
     public  void return_already_exist_same_venue_name()  throws Exception{
         when(venueService.countVenueName("venue")).thenReturn(1);
         ResultActions perform=mockMvc.perform(post("/checkVenueName.do").param("venueName","venue"));
@@ -228,6 +241,7 @@ class AdminVenueControllerTest {
     }
 
     @Test
+    @DisplayName("验证场馆名字返回不存在相同的场地名称")
     public  void return_not_exist_same_venue_name()  throws Exception{
         when(venueService.countVenueName("venue")).thenReturn(0);
         ResultActions perform=mockMvc.perform(post("/checkVenueName.do").param("venueName","venue"));

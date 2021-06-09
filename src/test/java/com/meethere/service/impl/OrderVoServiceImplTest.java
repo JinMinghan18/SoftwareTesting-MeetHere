@@ -6,6 +6,7 @@ import com.meethere.dao.VenueDao;
 import com.meethere.entity.Order;
 import com.meethere.entity.Venue;
 import com.meethere.entity.vo.OrderVo;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,6 +33,7 @@ class OrderVoServiceImplTest {
     private OrderVoServiceImpl orderVoService;
 
     @Test
+    @DisplayName("按订单ID返回订单模块")
     public void return_orderVo_by_orderID() {
         int orderID=1;
         String user="user";
@@ -64,6 +66,7 @@ class OrderVoServiceImplTest {
     }
 
     @Test
+    @DisplayName("按订单列表返回订单模块列表")
     public void return_orderVo_list_by_order_list() {
         int orderID=1;
         String user="user";

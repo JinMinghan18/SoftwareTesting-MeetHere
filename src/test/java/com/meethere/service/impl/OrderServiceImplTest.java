@@ -6,11 +6,14 @@ import com.meethere.dao.VenueDao;
 import com.meethere.entity.Order;
 import com.meethere.entity.Venue;
 import org.aspectj.weaver.ast.Or;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -36,6 +39,7 @@ class OrderServiceImplTest {
     private OrderServiceImpl orderService;
 
     @Test
+    @DisplayName("按订单ID查找订单")
     void find_order_by_orderID() {
         int orderID=1;
         String user="user";
@@ -63,6 +67,7 @@ class OrderServiceImplTest {
 
 
     @Test
+    @DisplayName("找到某一天的订单清单")
     void find_order_list_on_someday() {
         int orderID=1;
         String user="user";
@@ -87,6 +92,7 @@ class OrderServiceImplTest {
     }
 
     @Test
+    @DisplayName("查找用户订单")
     void find_user_orders() {
         String user="user";
         Pageable pageable=PageRequest.of(0,10);
@@ -97,6 +103,7 @@ class OrderServiceImplTest {
 
 
     @Test
+    @DisplayName("更新订单")
     void update_order() {
         int orderID=1;
         String user="user";
@@ -120,6 +127,7 @@ class OrderServiceImplTest {
     }
 
     @Test
+    @DisplayName("提交新订单")
     void submit_a_new_order() {
         String user="user";
         int venueID=2;
@@ -140,17 +148,15 @@ class OrderServiceImplTest {
     }
 
     @Test
+    @DisplayName("删除订单")
     void del_order() {
         orderService.delOrder(1);
         verify(orderDao).deleteById(1);
-
-        orderService.delOrder(2);
-        verify(orderDao).deleteById(2);
-
-        verify(orderDao,times(2)).deleteById(anyInt());
+        verify(orderDao).deleteById(anyInt());
     }
 
     @Test
+    @DisplayName("确认订单成功")
     void confirm_order_success() {
         int orderID=1;
         String user="user";
@@ -171,6 +177,7 @@ class OrderServiceImplTest {
     }
 
     @Test
+    @DisplayName("确认订单失败")
     public void confirm_order_fail(){
         int orderID=1;
         when(orderDao.findByOrderID(orderID)).thenReturn(null);
@@ -179,6 +186,7 @@ class OrderServiceImplTest {
                 "订单不存在"    );
     }
     @Test
+    @DisplayName("完成订单成功")
     void finish_order_success() {
         int orderID=1;
         String user="user";
@@ -198,6 +206,7 @@ class OrderServiceImplTest {
         verifyNoMoreInteractions(orderDao);
     }
     @Test
+    @DisplayName("完成订单失败")
     public void finish_order_fail(){
         int orderID=1;
         when(orderDao.findByOrderID(orderID)).thenReturn(null);
@@ -207,6 +216,7 @@ class OrderServiceImplTest {
     }
 
     @Test
+    @DisplayName("拒绝订单成功")
     void reject_order_success() {
         int orderID=1;
         String user="user";
@@ -227,6 +237,7 @@ class OrderServiceImplTest {
     }
 
     @Test
+    @DisplayName("拒绝订单失败")
     public void  reject_order_fail(){
         int orderID=1;
         when(orderDao.findByOrderID(orderID)).thenReturn(null);
@@ -235,15 +246,28 @@ class OrderServiceImplTest {
                 "订单不存在"    );
     }
     @Test
+    @DisplayName("返回没有审计订单分页")
     void return_noAudit_order_paged() {
         int state=1;
         Pageable pageable=PageRequest.of(0,10);
-        when(orderDao.findAllByState(state,pageable)).thenReturn(null);
+        String user="user";
+        int venueID=2;
+        LocalDateTime order_time=LocalDateTime.now();
+        LocalDateTime start_time= LocalDateTime.now().plusDays(1);
+        int hours=3;
+        int total=300;
+        Order order=new Order(1,user,venueID,state,order_time,start_time,hours,total);
+        List<Order> orders=new ArrayList<>();
+        orders.add(order);
+        Page<Order> page = new PageImpl<>(orders,pageable, orders.size());
+
+        when(orderDao.findAllByState(state,pageable)).thenReturn(page);
         orderService.findNoAuditOrder(pageable);
         verify(orderDao).findAllByState(state,pageable);
     }
 
     @Test
+    @DisplayName("返回审计订单分页")
     void  return_audit_order_paged() {
         int state1=2,state2=3;
 
